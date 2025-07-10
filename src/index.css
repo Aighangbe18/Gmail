@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-zinc-900 text-white font-sans;
+}
+
+/* index.css */
+html,
+body,
+#root {
+  height: 100%;
+}
