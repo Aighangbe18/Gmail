@@ -25,7 +25,7 @@ export default function Login() {
 
       API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       localStorage.setItem('token', token);
-      login(user);
+      login(user, token);
 
       toast.success('Login successful!');
       navigate('/inbox');

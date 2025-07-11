@@ -12,11 +12,12 @@ import {
   Menu,
 } from "lucide-react";
 import SidebarHeader from "./SidebarHeader";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Navbar({ expanded, setExpanded }) {
   const { user, logout } = useAuth();
   const [showSupport, setShowSupport] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const navigate = useNavigate();
 
@@ -24,11 +25,24 @@ export default function Navbar({ expanded, setExpanded }) {
     setIsTyping(e.target.value.length > 0);
   };
 
+  // Optional: Close menus when clicking outside
+  useEffect(() => {
+    const closeMenus = (e) => {
+      if (!e.target.closest(".profile-menu")) setProfileOpen(false);
+      if (!e.target.closest(".support-menu")) setShowSupport(false);
+    };
+    window.addEventListener("click", closeMenus);
+    return () => window.removeEventListener("click", closeMenus);
+  }, []);
+
   return (
-    <nav className="bg-blue-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between shadow-sm h-16 z-50">
+    <nav className="bg-blue-50 border-b border-gray-200 px-4 py-2 flex items-center justify-between shadow-sm h-16 z-50 relative">
       {/* LEFT: Mobile Menu + Logo */}
       <div className="flex items-center space-x-2">
-        <button className="md:hidden text-gray-700" onClick={() => setExpanded(prev => !prev)}>
+        <button
+          className="md:hidden text-gray-700"
+          onClick={() => setExpanded((prev) => !prev)}
+        >
           <Menu size={24} />
         </button>
         <SidebarHeader expanded={expanded} setExpanded={setExpanded} />
@@ -46,15 +60,25 @@ export default function Navbar({ expanded, setExpanded }) {
               isTyping ? "bg-white" : "bg-gray-100"
             }`}
           />
-          <ChevronDown className="absolute right-3 top-4 text-black cursor-pointer" size={18} />
+          <ChevronDown
+            className="absolute right-3 top-4 text-black cursor-pointer"
+            size={18}
+          />
         </div>
       </div>
 
       {/* RIGHT: Icons and Profile */}
-      <div className="flex items-center space-x-4 text-gray-600 relative">
+      <div className="flex items-center space-x-4 text-gray-600">
         {/* Help Menu */}
-        <div className="relative">
-          <button onClick={() => setShowSupport(prev => !prev)} className="hover:text-gray-800">
+        <div className="relative support-menu">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowSupport((prev) => !prev);
+              setProfileOpen(false);
+            }}
+            className="hover:text-gray-800"
+          >
             <HelpCircle size={22} />
           </button>
           {showSupport && (
@@ -70,7 +94,11 @@ export default function Navbar({ expanded, setExpanded }) {
         </div>
 
         {/* Icons */}
-        <button title="Settings" onClick={() => navigate("/settings")} className="hover:text-gray-800">
+        <button
+          title="Settings"
+          onClick={() => navigate("/settings")}
+          className="hover:text-gray-800"
+        >
           <Settings size={22} />
         </button>
         <button title="Gemini" className="hover:text-gray-800">
@@ -80,10 +108,17 @@ export default function Navbar({ expanded, setExpanded }) {
           <Grid size={22} />
         </button>
 
-        {/* Profile */}
+        {/* Profile Dropdown */}
         {user ? (
-          <div className="relative group">
-            <button className="hover:text-gray-800">
+          <div className="relative profile-menu">
+            <button
+              className="hover:text-gray-800"
+              onClick={(e) => {
+                e.stopPropagation();
+                setProfileOpen((prev) => !prev);
+                setShowSupport(false);
+              }}
+            >
               {user.avatar ? (
                 <img
                   src={user.avatar}
@@ -94,24 +129,30 @@ export default function Navbar({ expanded, setExpanded }) {
                 <UserCircle2 size={28} />
               )}
             </button>
-            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg hidden group-hover:block z-50">
-              <div className="px-4 py-3 text-sm text-gray-700 border-b">
-                Signed in as<br />
-                <strong>{user.email}</strong>
+
+            {profileOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div className="px-4 py-3 text-sm text-gray-700 border-b">
+                  Signed in as<br />
+                  <strong>{user.email}</strong>
+                </div>
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm"
+                >
+                  My Profile
+                </Link>
+                <div
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500 text-sm"
+                  onClick={() => {
+                    logout();
+                    navigate("/login");
+                  }}
+                >
+                  Logout
+                </div>
               </div>
-              <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100 text-gray-700 text-sm">
-                My Profile
-              </Link>
-              <div
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500 text-sm"
-                onClick={() => {
-                  logout();
-                  navigate("/login");
-                }}
-              >
-                Logout
-              </div>
-            </div>
+            )}
           </div>
         ) : (
           <Link to="/login" className="text-blue-500 hover:underline text-sm">

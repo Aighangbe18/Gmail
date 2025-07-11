@@ -28,6 +28,7 @@ import Starred from "./pages/Starred";
 import Important from "./pages/Important";
 import Settings from "./pages/Settings";
 import { Toaster } from "react-hot-toast";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
@@ -56,6 +57,7 @@ export default function App() {
         <Route path="/labels" element={<Labels />} />
         <Route path="/upgrade" element={<Upgrade />} />
         <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<Profile />} />
         <Route
           path="/email/:id"
           element={

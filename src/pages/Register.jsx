@@ -38,7 +38,7 @@ export default function Register() {
       );
 
       toast.success('🎉 Registration successful!');
-      navigate('/inbox');
+      navigate("/inbox");
     } catch (err) {
       setErrorMsg(err.response?.data?.error || '❌ Registration failed');
     } finally {
