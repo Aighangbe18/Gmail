@@ -27,65 +27,65 @@ import Snoozed from "./pages/Snoozed";
 import Starred from "./pages/Starred";
 import Important from "./pages/Important";
 import Settings from "./pages/Settings";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-
- <Route path="/inbox" element={<Inbox />} />
-       
-      <Route
-        path="/compose"
-        element={
-          
-          <Compose />        
-        }
-      />
-            <Route path="/labels/starred" element={<Starred />} />
-            <Route path="/labels/important" element={<Important />} />
-            <Route path="/snoozed" element={<Snoozed />} />
-            <Route path="/drafts" element={<Drafts />} />
-            <Route path="/chats" element={<Chats />} />
-            <Route path="/scheduled" element={<Scheduled />} />
-            <Route path="/all-mail" element={<AllMail />} />
-            <Route path="/spam" element={<Spam />} />
-            <Route path="/trash" element={<Trash />} />
-            <Route path="/categories/social" element={<Social />} />
-            <Route path="/categories/updates" element={<Updates />} />
-            <Route path="/categories/forums" element={<Forums />} />
-            <Route path="/categories/promotions" element={<Promotions />} />
-            <Route path="/manage-labels" element={<ManageLabels />} />
-            <Route path="/create-label" element={<CreatedLabels />} />
-            <Route path="/labels" element={<Labels />} />
-            <Route path="/upgrade" element={<Upgrade />} />
-             <Route path="/settings" element={<Settings />} />
-      <Route
-        path="/email/:id"
-        element={
-          <ProtectedRoute>
-            <Layout><ViewEmail /></Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/sent"
-        element={
-          <ProtectedRoute>
-            <SentMail />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <Layout><AdminPanel /></Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/compose" element={<Compose />} />
+        <Route path="/labels/starred" element={<Starred />} />
+        <Route path="/labels/important" element={<Important />} />
+        <Route path="/snoozed" element={<Snoozed />} />
+        <Route path="/drafts" element={<Drafts />} />
+        <Route path="/chats" element={<Chats />} />
+        <Route path="/scheduled" element={<Scheduled />} />
+        <Route path="/all-mail" element={<AllMail />} />
+        <Route path="/spam" element={<Spam />} />
+        <Route path="/trash" element={<Trash />} />
+        <Route path="/categories/social" element={<Social />} />
+        <Route path="/categories/updates" element={<Updates />} />
+        <Route path="/categories/forums" element={<Forums />} />
+        <Route path="/categories/promotions" element={<Promotions />} />
+        <Route path="/manage-labels" element={<ManageLabels />} />
+        <Route path="/create-label" element={<CreatedLabels />} />
+        <Route path="/labels" element={<Labels />} />
+        <Route path="/upgrade" element={<Upgrade />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route
+          path="/email/:id"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ViewEmail />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/sent"
+          element={
+            <ProtectedRoute>
+              <SentMail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AdminPanel />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

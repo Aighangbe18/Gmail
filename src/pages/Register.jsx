@@ -1,35 +1,116 @@
-import { useState } from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' })
-  const navigate = useNavigate()
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setErrorMsg('');
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      await axios.post('http://localhost:5000/api/auth/register', form)
-      navigate('/login')
-    } catch (err) {
-      alert(err.response?.data?.error || 'Registration failed')
+    e.preventDefault();
+    if (loading) return;
+
+    if (!form.name || !form.email || !form.password) {
+      setErrorMsg('Please fill in all fields');
+      return;
     }
-  }
+
+    setLoading(true);
+    setErrorMsg('');
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/register`,
+        form,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      toast.success('🎉 Registration successful!');
+      navigate('/inbox');
+    } catch (err) {
+      setErrorMsg(err.response?.data?.error || '❌ Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-900">
-      <form onSubmit={handleSubmit} className="bg-zinc-800 p-8 rounded-xl shadow-xl w-full max-w-sm space-y-4">
-        <h2 className="text-2xl font-semibold text-center">Create an Account</h2>
-        <input name="name" placeholder="Name" onChange={handleChange} className="w-full px-4 py-2 rounded bg-zinc-700" />
-        <input name="email" type="email" placeholder="Email" onChange={handleChange} className="w-full px-4 py-2 rounded bg-zinc-700" />
-        <input name="password" type="password" placeholder="Password" onChange={handleChange} className="w-full px-4 py-2 rounded bg-zinc-700" />
-        <button className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded font-semibold">Register</button>
-        <p className="text-sm text-center">
-          Already have an account? <a href="/login" className="text-blue-400 underline">Login</a>
+    <div className="min-h-screen flex items-center justify-center bg-neutral-100 px-4">
+      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
+        <div className="flex flex-col items-center mb-6">
+          <img
+            src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r2.png"
+            alt="Gmail"
+            className="h-12"
+          />
+          <h2 className="mt-4 text-2xl font-semibold text-gray-800 text-center">
+            Create your Google Account
+          </h2>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full px-4 text-black py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full px-4 py-2 text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          {errorMsg && (
+            <div className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded-lg">
+              {errorMsg}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full py-2 text-white rounded-lg font-semibold transition duration-200 ${
+              loading
+                ? 'bg-blue-300 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700'
+            }`}
+          >
+            {loading ? 'Creating Account...' : 'Register'}
+          </button>
+        </form>
+
+        <p className="text-sm text-center text-gray-600 mt-6">
+          Already have an account?{' '}
+          <a href="/login" className="text-blue-500 hover:underline">
+            Sign in instead
+          </a>
         </p>
-      </form>
+      </div>
     </div>
-  )
+  );
 }

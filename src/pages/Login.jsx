@@ -67,7 +67,7 @@ export default function Login() {
           onClick={() => toast('Google login not implemented')}
         >
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png"
+            src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_default_1x_r5.png"
             alt="Google"
             className="w-5 h-5"
           />
@@ -87,7 +87,7 @@ export default function Login() {
             placeholder="Email or phone"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-500 px-4 py-2 rounded-md outline-none"
+            className="w-full border text-black border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-500 px-4 py-2 rounded-md outline-none"
             required
             disabled={loading}
           />
@@ -99,7 +99,7 @@ export default function Login() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-500 px-4 py-2 rounded-md outline-none pr-10"
+              className="w-full border border-gray-300 text-black focus:border-blue-600 focus:ring-1 focus:ring-blue-500 px-4 py-2 rounded-md outline-none pr-10"
               required
               disabled={loading}
             />
