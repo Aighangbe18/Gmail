@@ -30,6 +30,8 @@ export default function ViewEmail() {
         <button onClick={handleDelete} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
           Delete
         </button>
+        <button className="bg-blue-500 ml-10 hover:bg-blue-900 px-4 py-2 text-white rounded"
+        onClick={ () => navigate ("/compose")}> Reply</button>
       </div>
     </Layout>
   );
